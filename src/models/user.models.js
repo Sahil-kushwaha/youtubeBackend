@@ -24,7 +24,7 @@ const userSchema = new Schema({
                 index:true
             },
             avatar:{
-                type:Stirng, // cloudinary url
+                type:String, // cloudinary url
                 required: true
             },
             coverImage:{
@@ -39,16 +39,16 @@ const userSchema = new Schema({
                 required:[true,"Password is required"]
            },
            refreshToken:{
-              type:Stirng
+              type:String
            }     
             
 },{timestamp:true})
 
 //hash the password using bcrypt npm package
-userSchema.pre('save',function(next){
+userSchema.pre('save',async function(next){
     if(!this.isModified("password")) return next();
 
-    this.password=bcrypt.hash(this.password,10)
+    this.password= await bcrypt.hash(this.password,10)
     next()
 })
 
