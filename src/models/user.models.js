@@ -32,7 +32,7 @@ const userSchema = new Schema({
             },
             watchHistory:{
                   type:Schema.Types.ObjectId,   
-                  ref:"Video"
+                  ref:"Video",
             },
            password:{
                 type:String,
@@ -42,7 +42,7 @@ const userSchema = new Schema({
               type:String
            }     
             
-},{timestamp:true})
+},{timestamps:true})
 
 //hash the password using bcrypt npm package
 userSchema.pre('save',async function(next){
