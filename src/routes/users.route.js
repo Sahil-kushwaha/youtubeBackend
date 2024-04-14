@@ -28,7 +28,6 @@ userRouter.route('/register').post(
         }
     ]),
     registerUser)
-
 userRouter.route("/login").post(loginUser)    
 
 // secured routes
@@ -39,7 +38,7 @@ userRouter.route("/get-user").get(verifyJWT,getCurrentUser)
 userRouter.route("/update-account-details").patch(verifyJWT,updateAccountDetails)
 userRouter.route("/avatar").patch(verifyJWT,upload.single("avatar"),updateUserAvatar)
 userRouter.route("/cover-image").patch(verifyJWT,upload.single("coverImage"),updateUserCoverImage)
-userRouter.route("/get-user-channel-profile").get(verifyJWT,getUserChannelProfile)
+userRouter.route("/channel/:username").get(verifyJWT,getUserChannelProfile)
 userRouter.route("/watch-history").get(verifyJWT,watchHistory)
 
 

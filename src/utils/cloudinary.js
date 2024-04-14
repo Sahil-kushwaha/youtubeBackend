@@ -14,9 +14,8 @@ const cloudinaryUploadFile=async (localFilePath)=>{
                       const response=await cloudinary.uploader.upload(localFilePath,
                       {
                          resource_type:"auto" 
-                      })        
+                      })   
                      // file has been uploaded successfully
-                      // console.log(response.url)
                       fs.unlinkSync(localFilePath);
                       return response;
                 }   
@@ -24,22 +23,22 @@ const cloudinaryUploadFile=async (localFilePath)=>{
                catch(error){
                     //remove the locally saved temprory file as the upload operartion got failed
                     fs.unlinkSync(localFilePath) 
+                    console.log("couldinary service::Error: ",error)
                     return null;
                } 
 }
 
-const cloudinaryDeletFile=async (publicId,option)=>{
+const cloudinaryDeletFile=async (publicId)=>{
                 try{
                        if(!publicId) return null;
                       //delete file on cloudinary
-                      const response=await cloudinary.uploader.destroy(publicId,option)        
+                      const response=await cloudinary.uploader.destroy(publicId)        
                      // file has been deleted successfully
                       // console.log(response)
                       return response;
                 }   
                 
                catch(error){
-            
                     return null;
                } 
 }

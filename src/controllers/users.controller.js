@@ -61,7 +61,6 @@ const registerUser = asyncHandler(async (req, res, next) => {
       coverImageLocalPath = req.files.coverImage[0]?.path
    }
 
-
    if (!avatarLocalPath) {
       throw new ApiError(400, "Avatar file is required")
    }
@@ -154,7 +153,7 @@ const logoutUser = asyncHandler(async (req, res) => {
    await User.findByIdAndUpdate(
       req.user._id,
       {
-         $set: { refreshToken: undefined }
+         $unset: { refreshToken: "" }
       },
       {
          new: true
@@ -259,7 +258,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
       throw new ApiError(400, "All fields are required")
    }
 
-   const user = User.findByIdAndUpdate(req.user?._id,
+   const user = await User.findByIdAndUpdate(req.user?._id,
       {
          $set:
          {
@@ -273,7 +272,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
    return res
       .status(200)
-      .json(new ApiResponse(200, user, "Account details "))
+      .json(new ApiResponse(200, user, "account details updated successfully "))
 
 })
 
@@ -284,15 +283,16 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
       throw new ApiError(400, "Avatar file is missing")
    }
    const cloudinaryPath = await cloudinaryUploadFile(avatarLocalPath);
-
+   
    if (!cloudinaryPath.url) {
       throw new ApiError(400, "Error while uploading on avatar")
    }
 
    const oldAvatarUrl = await User.findById(req.user?._id).select("avatar")
-   const publicId = extractPublicId(oldAvatarUrl)
+   
+   const publicId = extractPublicId(oldAvatarUrl.avatar)
 
-  const user= await User.findByIdAndUpdate(req.user?._id,
+   const user= await User.findByIdAndUpdate(req.user?._id,
       {
          $set: { avatar: cloudinaryPath.url }
       },
@@ -303,8 +303,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
    return res
       .status(200)
-      .json(200, user, "cover image updated successfully")
-
+      .json(new ApiResponse(200, user, "Avatar updated successfully"))
 
 })
 
@@ -321,7 +320,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
    }
 
    const oldCoverImageUrl = await User.findById(req.user?._id).select("coverImage")
-   const publicId = extractPublicId(oldCoverImageUrl)
+   const publicId = extractPublicId(oldCoverImageUrl.coverImage)
 
    const user = await User.findByIdAndUpdate(req.user?._id,
       {
@@ -334,7 +333,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 
    return res
       .status(200)
-      .json(200, user, "cover image updated successfully")
+      .json(new ApiResponse(200, user, "cover image updated successfully"))
 
 })
 
@@ -342,7 +341,7 @@ const getUserChannelProfile= asyncHandler(async(req,res)=>{
          
       const {username}=req.params
 
-      if(username?.trim()){
+      if(!username?.trim()){
             throw new ApiError(400, "username is missing")
       }
 
