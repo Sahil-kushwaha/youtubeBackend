@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import { asyncHandler } from '../utils/asyncHandler.js'
 import { ApiError } from '../utils/ApiError.js'
 import User from '../models/user.models.js'
@@ -5,7 +6,6 @@ import { cloudinaryUploadFile,cloudinaryDeletFile } from '../utils/cloudinary.js
 import { ApiResponse } from '../utils/ApiResponse.js'
 import jwt from 'jsonwebtoken'
 import { extractPublicId } from 'cloudinary-build-url'
-import Video from "../models/video.models.js";
 
 const generateAccessAndRefereshTokens = async (userId) => {
    try {
@@ -105,7 +105,7 @@ const loginUser = asyncHandler(async (req, res) => {
    //send access and refresh token as secure cookie
 
    const { email, username, password } = req.body
-   console.log(req.body)
+   
    if (!username && !email) {
       throw new ApiError(400, "username or email is required")
    }
@@ -413,7 +413,7 @@ const watchHistory=asyncHandler(async(req,res)=>{
                   
               {
                  $match:{
-                      _id:req.user?._id
+                      _id:new mongoose.Types.ObjectId(req.user._id)
                  }
               },
 

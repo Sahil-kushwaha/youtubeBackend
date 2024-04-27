@@ -39,8 +39,32 @@ const cloudinaryDeletFile=async (publicId)=>{
                 }   
                 
                catch(error){
+                    console,log("couldinary service::Error:",error.message)
                     return null;
                } 
 }
 
-export {cloudinaryUploadFile,cloudinaryDeletFile}
+// pass array of public id but of same type
+const cloudinaryDeleteManyFile=async (publicIds,type)=>{
+                try{
+                       if(!publicIds) return null;
+                      //delete file on cloudinary
+                      const response=await cloudinary.api
+                      .delete_resources(
+                         publicIds, 
+                         { 
+                              type: 'upload', resource_type: type ? type : "image" 
+                         }
+                       )
+
+                      return response;
+                }   
+                
+               catch(error){
+                    console.log("couldinary service::Error:",error.message)
+                    return null;
+               } 
+}
+
+export {cloudinaryUploadFile,cloudinaryDeletFile,cloudinaryDeleteManyFile}
+

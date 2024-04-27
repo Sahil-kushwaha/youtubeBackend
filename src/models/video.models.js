@@ -32,9 +32,13 @@ const videoSchema= new Schema({
             },
             owner:{
                 type:Schema.Types.ObjectId,
-                ref:"User"
+                ref:"User",
+        
             }
 },{timestamps:true})
+
+// // Create a compound text index for both title and description
+// videoSchema.index({ title: 'text', description: 'text' }, { name: 'search-videos' });
 
 videoSchema.plugin(mongooseAggregatePaginate)
 
