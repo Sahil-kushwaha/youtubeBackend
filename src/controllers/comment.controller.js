@@ -45,11 +45,15 @@ const getVideoComments = asyncHandler(async (req, res) => {
               },
         ])
 
+        if((await commentAggregate).length===0){
+           throw new ApiError(200 ,"theres is No comment for this video")
+        }
+
         const options = {
             page: parseInt(page, 10),
             limit: parseInt(limit, 10)
         };
-        console.log(commentAggregate)
+        
     
         const comments = await Comment.aggregatePaginate(commentAggregate, options);
         
@@ -60,8 +64,8 @@ const getVideoComments = asyncHandler(async (req, res) => {
     } 
     catch (error) {
         return res
-         .status(error.code || 500)
-         .json(new ApiError(error.code || 500 , error.message || "internal server error`"))
+         .status(error.statusCode || 500)
+         .json(new ApiError(error.statusCode || 500 , error.message || "internal server error`"))
     }
 })
 
@@ -91,8 +95,8 @@ const addComment = asyncHandler(async (req, res) => {
 
     } catch (error) {
          return res
-          .status(error.code || 500)
-          .json(new ApiError(error.code || 500 , error.message || "internal server error`"))
+          .status(error.statusCode || 500)
+          .json(new ApiError(error.statusCode || 500 , error.message || "internal server error`"))
     }
 
 
@@ -126,8 +130,8 @@ const updateComment = asyncHandler(async (req, res) => {
   }
   catch (error) {
       return res
-        .status(error.code || 500)
-        .json(new ApiError(error.code || 500 , error.message || "internal server error`"))
+        .status(error.statusCode || 500)
+        .json(new ApiError(error.statusCode || 500 , error.message || "internal server error`"))
   }
 
 })
@@ -144,8 +148,8 @@ const deleteComment = asyncHandler(async (req, res) => {
     }
     catch(error){
         return res
-          .status(error.code || 500)
-          .json(new ApiError(error.code || 500 , error.message ||  "internal server error"))
+          .status(error.statusCode || 500)
+          .json(new ApiError(error.statusCode || 500 , error.message ||  "internal server error"))
     }
 
 })

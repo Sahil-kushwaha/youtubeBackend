@@ -52,8 +52,8 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
     }
     catch (error) {
         return res
-            .status(error.code || 500)
-            .json(new ApiError(error.code || 500, error.message || "internal server error"))
+            .status(error.statusCode || 500)
+            .json(new ApiError(error.statusCode || 500, error.message || "internal server error"))
     }
 })
 
@@ -107,8 +107,8 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 
   catch (error) {
     return res
-        .status(error.code || 500)
-        .json(new ApiError(error.code || 500,  error.message || "internal server error"))
+        .status(error.statusCode || 500)
+        .json(new ApiError(error.statusCode || 500,  error.message || "internal server error"))
    }
    
 })
@@ -163,8 +163,8 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 
   catch (error) {
     return res
-        .status(error.code || 500)
-        .json(new ApiError(error.code || 500,  error.message || "internal server error"))
+        .status(error.statusCode || 500)
+        .json(new ApiError(error.statusCode || 500,  error.message || "internal server error"))
    }
 }
 )
@@ -178,7 +178,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                 {
                   $match:{
                       video:{$exists: true},
-                      likedBy:"user"
+                      likedBy:new mongoose.Types.ObjectId(user)
                   }
                 },
                 {
@@ -219,10 +219,8 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                 }
       ])
      
-      if(!getAllVideo){
-         return res
-           .status(200)
-           .json(new ApiResponse(200,{},"User do not liked any video "))
+      if(getAllVideo.length===0){
+             throw new ApiError(200 ,"User do not liked any video")
       }
 
       return res
@@ -231,8 +229,8 @@ const getLikedVideos = asyncHandler(async (req, res) => {
   } 
   catch (error) {
          return res
-             .status(error.code || 500)
-             .json(new ApiError(error.code || 500, error.message || "internal server error"))
+             .status(error.statusCode || 500)
+             .json(new ApiError(error.statusCode || 500, error.message || "internal server error"))
             
   }
 })
